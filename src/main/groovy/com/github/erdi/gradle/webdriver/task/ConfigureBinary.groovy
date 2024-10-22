@@ -75,10 +75,13 @@ abstract class ConfigureBinary extends DefaultTask {
         def versionAndUri = new DriverUrlsConfiguration(driverUrlsConfiguration.get().asFile()).versionAndUriFor(downloadSpec())
         def installer = new DriverDistributionInstaller(project, downloadRoot.asFile.get(), driverName, versionAndUri)
         def distributionRoot = installer.getDistributionRoot(versionAndUri.version).get()
-        def osSpecificBinaryName = operatingSystem.getExecutableName(webDriverBinaryMetadata.binaryName)
+        def osSpecificBinaryNames = operatingSystem.getExecutableNames(webDriverBinaryMetadata.binaryName)
+
         def binaryFile = objectFactory.fileTree().tap {
             from(distributionRoot)
-            include("**/$osSpecificBinaryName")
+            osSpecificBinaryNames.each {
+                include(["**/${it}", "**/${it.toLowerCase()}"])
+            }
         }.singleFile
         def binaryAbsolutePath = binaryFile.absolutePath
         binaryAwares*.setDriverBinaryPathAndVersion(binaryAbsolutePath, versionAndUri.version)

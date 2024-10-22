@@ -50,7 +50,7 @@ class DriverDistributionInstallerSpec extends PluginSpec {
         runTasksWithUniqueGradleHomeDir 'outputBinaryPath'
 
         then:
-        downloadedBinaryFile(os.getExecutableName(driverName), os).text == repository.driverFileContents
+        downloadedBinaryFile(os.getExecutableNames(driverName)?.first(), os).text == repository.driverFileContents
 
         where:
         driverName = 'testdriver'
