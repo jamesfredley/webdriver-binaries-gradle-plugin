@@ -80,6 +80,7 @@ abstract class ConfigureBinary extends DefaultTask {
         def binaryFile = objectFactory.fileTree().tap {
             from(distributionRoot)
             osSpecificBinaryNames.each {
+                // file name is case sensitive and some are provided in upper case
                 include(["**/${it}", "**/${it.toLowerCase()}"])
             }
         }.singleFile
